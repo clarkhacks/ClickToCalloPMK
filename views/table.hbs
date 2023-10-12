@@ -1,0 +1,121 @@
+<html>
+	<head>
+		<title>Table</title>
+		<script src="https://cdn.tailwindcss.com">
+			</script>
+
+		<style>
+        #data-table > tbody > tr:nth-child(2) {
+        background-color: #beeadf;
+    }       
+#data-table {
+  text-align: left;
+}
+@media (max-width: 640px) {
+            #data-table {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem; /* Adds some spacing between stacked cards */
+            }
+              /* Hide the first item (header card) */
+    #data-table > tbody > tr:first-child {
+        display: none;
+    }
+
+            #data-table tr {
+                display: flex;
+                flex-direction: column;
+                padding: 1rem;
+                border: 1px solid #ccc;
+                border-radius: 0.5rem;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                background-color: #fff;
+              margin-bottom: 1rem;
+            }
+
+            #data-table th, #data-table td {
+                width: 100%;
+                margin: 0;
+                padding: 0.5rem;
+            }
+
+            .data-header {
+                font-weight: bold;
+            }
+        }
+
+        /* Add styles for the table wrapper */
+        .table-wrapper {
+            overflow-x: auto;
+            max-width: 100%; /* Ensure the table wrapper does not exceed the screen width */
+        }
+  </style>
+	</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+    <div class="bg-white p-6 rounded-lg shadow-md max-w-7xl">
+        <table id="data-table" class="w-full table-fixed">
+            <thead>
+                <tr>
+                    <th class="bg-gray-300">Called</th>
+                    <th class="bg-gray-300">Name</th>
+                    <th class="bg-gray-300">City</th>
+                    <th class="bg-gray-300">State</th>
+                    <th class="bg-gray-300">Phone</th>
+                    <th class="bg-gray-300">Company</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each data}}
+                <tr class="border-gray-200 mb-1 border-b-2">
+                    <td><input type="checkbox" {{#if called}}checked{{/if}}></td>
+                    <td class="text-gray-800">{{Name}}</td>
+                    <td class="text-gray-800">{{City}}</td>
+                    <td class="text-gray-800">{{State}}</td>
+                    <td class="text-gray-800"><a href="tel:{{Phone}}" class="text-blue-500">{{Phone}}</a></td>
+                    <td class="text-gray-800">{{Company}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+		<script>
+        document.addEventListener("DOMContentLoaded", function() {
+			console.log("loaded")
+            const checkboxes = document.querySelectorAll('#data-table input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const name = this.dataset.name;
+                    localStorage.setItem(name, this.checked);
+                    sortTable();
+                });
+            });
+
+            function sortTable() {
+                const tbody = document.querySelector('#data-table tbody');
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+
+                const sortedRows = rows.sort((a, b) => {
+                    const isCheckedA = localStorage.getItem(a.cells[1].textContent) === 'true';
+                    const isCheckedB = localStorage.getItem(b.cells[1].textContent) === 'true';
+
+                    if (isCheckedA && !isCheckedB) {
+                        return 1;
+                    } else if (!isCheckedA && isCheckedB) {
+                        return -1;
+                    } else {
+                        const nameA = a.cells[1].textContent.toLowerCase();
+                        const nameB = b.cells[1].textContent.toLowerCase();
+                        return nameA.localeCompare(nameB);
+                    }
+                });
+
+                tbody.innerHTML = '';
+                sortedRows.forEach(row => tbody.appendChild(row));
+            }
+
+            sortTable();
+        });
+    </script>
+	</body>
+</html>
