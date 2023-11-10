@@ -14,7 +14,7 @@ const upload = multer({
 // path
 const path = require('path');
 // port
-const port = process.env.PORT || 3006;
+const port = process.env.PORT || 3000;
 // handlebars
 const hbs = require('hbs')
 // view engine
