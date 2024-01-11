@@ -17,7 +17,7 @@ function renderTable(data) {
     table.innerHTML = ''; // Clear the table
 
     // Sort data alphabetically by 'Name' property
-    data.sort((a, b) => a.Name.localeCompare(b.Name));
+    data.sort((a, b) => a.Name.localeCompare(b.City));
 
     // Create table headers
     const headerRow = table.insertRow();
